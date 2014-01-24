@@ -1,0 +1,3 @@
+[submodule "deps/simple3dgeom"]
+	path = deps/simple3dgeom
+	url = git@github.com:yavorpap/simple3dgeom.git
