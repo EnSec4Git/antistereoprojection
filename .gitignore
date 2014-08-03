@@ -21,6 +21,7 @@
 *.app
 
 # Project-specific
+!out/
 out/*
 *.depend
 *.layout
