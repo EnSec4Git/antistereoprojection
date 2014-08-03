@@ -22,6 +22,6 @@
 
 # Project-specific
 !out/
-out/*
+out/*.txt
 *.depend
 *.layout
