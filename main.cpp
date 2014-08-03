@@ -34,26 +34,26 @@ fp3dpoint centerOfProjectedCircle(fp3dpoint planeCenter, fptype radius) {
 int main() {
     std::ifstream fin("input.txt");
     int cnt;
-    fptype radius;
+    fptype rad_factor;
     while(!fin.eof()) {
         fin>>cnt;
         if(fin.eof()) {
             break;
         }
         std::cout<<"Input: "<<cnt<<std::endl;
-        fin>>radius;
+        fin>>rad_factor;
         //std::vector<fp3dpoint> points;
         char fname[100];
         sprintf(fname, "out/output%d.txt", cnt);
-        fptype rad_factor = 1/radius;
         std::ofstream fout(fname);
         for(int i=0; i<cnt; i++) {
             mutfp3dpoint currentPoint;
+            int j;
             fptype x,y;
-            fin>>x>>y;
+            fin>>j>>x>>y;
+            assert(j == i+1);
             currentPoint.setX(x); currentPoint.setY(y);
-            currentPoint = currentPoint * rad_factor;
-            fp3dpoint center = centerOfProjectedCircle(currentPoint, 1.0 * (i+1));
+            fp3dpoint center = centerOfProjectedCircle(currentPoint, rad_factor * (i+1));
             fout<<i+1<<" ";
             center.print(fout);
         }
