@@ -16,7 +16,7 @@ do
 	if [ -f $fullfni ];
 	then
 		echo $i >> $fname
-		echo `grep "^$i " ccin_coords/radius.txt | cut -f 2 -d " "` >> $fname
+		echo `grep "^$i " ccin_coords/ratio.txt | cut -f 2 -d " "` >> $fname
 		cat $fullfni >> $fname
 		printf '\n' >> $fname
 	fi

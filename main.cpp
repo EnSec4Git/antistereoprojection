@@ -34,14 +34,15 @@ fp3dpoint centerOfProjectedCircle(fp3dpoint planeCenter, fptype radius) {
 int main() {
     std::ifstream fin("input.txt");
     int cnt;
-    fptype rad_factor;
+    fptype rad_factor, r1;
     while(!fin.eof()) {
         fin>>cnt;
         if(fin.eof()) {
             break;
         }
         std::cout<<"Input: "<<cnt<<std::endl;
-        fin>>rad_factor;
+        fin>>r1;
+        rad_factor = 1.0 / r1;
         //std::vector<fp3dpoint> points;
         char fname[100];
         sprintf(fname, "out/output%d.txt", cnt);
@@ -53,9 +54,15 @@ int main() {
             fin>>j>>x>>y;
             assert(j == i+1);
             currentPoint.setX(x); currentPoint.setY(y);
+            assert(rad_factor * (i+1) <= 1.0);
             fp3dpoint center = centerOfProjectedCircle(currentPoint, rad_factor * (i+1));
-            fout<<i+1<<" ";
-            center.print(fout);
+            //fout<<i+1<<" ";
+            //center.print(fout);
+            fptype R, phi, theta;
+            R = center.length();
+            phi = atan2(center.Y(),center.X());
+            theta = acos(center.Z()/R);
+            fout<<phi<<" "<<theta<<" "<<(rad_factor * (i+1))<<std::endl;
         }
         fout.close();
     }
