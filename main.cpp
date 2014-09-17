@@ -33,9 +33,11 @@ fp3dpoint centerOfProjectedCircle(fp3dpoint planeCenter, fptype radius) {
 
 int main() {
     std::ifstream fin("input.txt");
+    std::ofstream ratios("out/ratios.txt");
     int cnt;
     fptype rad_factor, r1;
     while(!fin.eof()) {
+        fptype sum_plane = 0, tot_plane, sum_sphere = 0, tot_sphere;
         fin>>cnt;
         if(fin.eof()) {
             break;
@@ -63,7 +65,13 @@ int main() {
             phi = atan2(center.Y(),center.X());
             theta = acos(center.Z()/R);
             fout<<phi<<" "<<theta<<" "<<(rad_factor * (i+1))<<std::endl;
+            sum_plane += sqr(rad_factor * j);
+            sum_sphere += 2 * (1 - cos(rad_factor * j));
         }
+        tot_sphere = 2;
+        tot_plane = 1;
+        ratios<<"N: "<<cnt<<"; Ratio in plane: "<<(sum_plane/tot_plane)<<
+            "; Ration on sphere: "<<(sum_sphere/tot_sphere)<<std::endl;
         fout.close();
     }
     return 0;
