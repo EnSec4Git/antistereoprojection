@@ -3,22 +3,24 @@
 #include <assert.h>
 #include <fstream>
 #include <vector>
+#include <utility>
 #include "deps/simple3dgeom/include/simple3dgeom.h"
 using namespace simple3dgeom;
 
 typedef double fptype;
 typedef Point3D<fptype, DefaultNumberComparator<fptype, -9> > fp3dpoint;
 typedef MutablePoint3D<fptype, DefaultNumberComparator<fptype, -9> > mutfp3dpoint;
+typedef std::pair<fp3dpoint, fptype> circle;
 
 fp3dpoint antistereographic(const fp3dpoint& pt) {
-    assert((DefaultNumberComparator<fptype,9>::compare(pt.Z(), 0)));
+    assert((DefaultNumberComparator<fptype, -9>::compare(pt.Z(), 0)));
     fptype factor = 1/(1+pt.sqlength());
-    fp3dpoint result = fp3dpoint(2*pt.X()*factor, 2*pt.Y()*factor, (pt.sqlength()-2)*factor);
+    fp3dpoint result = fp3dpoint(2*pt.X()*factor, 2*pt.Y()*factor, (pt.sqlength()-1)*factor);
     return result;
 }
 
-fp3dpoint centerOfProjectedCircle(fp3dpoint planeCenter, fptype radius) {
-    static fp3dpoint zeroPoint = fp3dpoint(0, 0, 0);
+circle projectedCircle(fp3dpoint planeCenter, fptype radius) {
+    static fp3dpoint const zeroPoint = fp3dpoint(0, 0, 0);
     fp3dpoint a, b;
     if(planeCenter == zeroPoint) {
         a = fp3dpoint(1, 0, 0) * radius;
@@ -27,8 +29,13 @@ fp3dpoint centerOfProjectedCircle(fp3dpoint planeCenter, fptype radius) {
         a = planeCenter + normalized(planeCenter) * radius;
         b = planeCenter + normalized(planeCenter) * (-radius);
     }
-    fp3dpoint a1 = antistereographic(a), b1 = antistereographic(b1);
-    return normalized((a1+b1) * 0.5);
+    fp3dpoint a1 = antistereographic(a), b1 = antistereographic(b);
+    assert((DefaultNumberComparator<fptype, -9>::compare(a1.sqlength(), 1.0)));
+    assert((DefaultNumberComparator<fptype, -9>::compare(b1.sqlength(), 1.0)));
+    fp3dpoint center = normalized((a1+b1) * 0.5);
+    fptype sp = a1 * b1;
+    fptype angle = acos(sp) / 2;
+    return std::make_pair<fp3dpoint, fptype>(center, angle);
 }
 
 int main() {
@@ -57,7 +64,9 @@ int main() {
             assert(j == i+1);
             currentPoint.setX(x); currentPoint.setY(y);
             assert(rad_factor * (i+1) <= 1.0);
-            fp3dpoint center = centerOfProjectedCircle(currentPoint, rad_factor * (i+1));
+            circle projCircle = projectedCircle(currentPoint, rad_factor * (i+1));
+            fp3dpoint center = projCircle.first;
+            fptype sphrad = projCircle.second;
             //fout<<i+1<<" ";
             //center.print(fout);
             fptype R, phi, theta;
@@ -66,12 +75,12 @@ int main() {
             theta = acos(center.Z()/R);
             fout<<phi<<" "<<theta<<" "<<(rad_factor * (i+1))<<std::endl;
             sum_plane += sqr(rad_factor * j);
-            sum_sphere += 2 * (1 - cos(rad_factor * j));
+            sum_sphere += 2 * (1 - cos(sphrad));
         }
         tot_sphere = 2;
         tot_plane = 1;
         ratios<<"N: "<<cnt<<"; Ratio in plane: "<<(sum_plane/tot_plane)<<
-            "; Ration on sphere: "<<(sum_sphere/tot_sphere)<<std::endl;
+            "; Ratio on sphere: "<<(sum_sphere/tot_sphere)<<std::endl;
         fout.close();
     }
     return 0;
