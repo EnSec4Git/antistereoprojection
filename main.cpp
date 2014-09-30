@@ -8,12 +8,13 @@
 using namespace simple3dgeom;
 
 typedef double fptype;
+typedef DefaultNumberComparator<fptype, -9> cmprtr;
 typedef Point3D<fptype, DefaultNumberComparator<fptype, -9> > fp3dpoint;
 typedef MutablePoint3D<fptype, DefaultNumberComparator<fptype, -9> > mutfp3dpoint;
 typedef std::pair<fp3dpoint, fptype> circle;
 
 fp3dpoint antistereographic(const fp3dpoint& pt) {
-    assert((DefaultNumberComparator<fptype, -9>::compare(pt.Z(), 0)));
+    assert((cmprtr::compare(pt.Z(), 0)));
     fptype factor = 1/(1+pt.sqlength());
     fp3dpoint result = fp3dpoint(2*pt.X()*factor, 2*pt.Y()*factor, (pt.sqlength()-1)*factor);
     return result;
@@ -30,8 +31,8 @@ circle projectedCircle(fp3dpoint planeCenter, fptype radius) {
         b = planeCenter + normalized(planeCenter) * (-radius);
     }
     fp3dpoint a1 = antistereographic(a), b1 = antistereographic(b);
-    assert((DefaultNumberComparator<fptype, -9>::compare(a1.sqlength(), 1.0)));
-    assert((DefaultNumberComparator<fptype, -9>::compare(b1.sqlength(), 1.0)));
+    assert((cmprtr::compare(a1.sqlength(), 1.0)));
+    assert((cmprtr::compare(b1.sqlength(), 1.0)));
     fp3dpoint center = normalized((a1+b1) * 0.5);
     fptype sp = a1 * b1;
     fptype angle = acos(sp) / 2;
@@ -67,6 +68,7 @@ int main() {
             circle projCircle = projectedCircle(currentPoint, rad_factor * (i+1));
             fp3dpoint center = projCircle.first;
             fptype sphrad = projCircle.second;
+            assert((cmprtr::compare(center.sqlength(), 1.0)));
             //fout<<i+1<<" ";
             //center.print(fout);
             fptype R, phi, theta;
