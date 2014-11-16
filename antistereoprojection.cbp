@@ -27,12 +27,30 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Density">
+				<Option output="bin/Density/density" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Density/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Unit filename="common.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="density.cpp">
+			<Option target="Density" />
+		</Unit>
+		<Unit filename="main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

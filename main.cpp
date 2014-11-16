@@ -1,17 +1,4 @@
-#include <stdio.h>
-#include <iostream>
-#include <assert.h>
-#include <fstream>
-#include <vector>
-#include <utility>
-#include "deps/simple3dgeom/include/simple3dgeom.h"
-using namespace simple3dgeom;
-
-typedef double fptype;
-typedef DefaultNumberComparator<fptype, -9> cmprtr;
-typedef Point3D<fptype, DefaultNumberComparator<fptype, -9> > fp3dpoint;
-typedef MutablePoint3D<fptype, DefaultNumberComparator<fptype, -9> > mutfp3dpoint;
-typedef std::pair<fp3dpoint, fptype> circle;
+#include "common.h"
 
 fp3dpoint antistereographic(const fp3dpoint& pt) {
     assert((cmprtr::compare(pt.Z(), 0)));
