@@ -41,7 +41,7 @@ int main() {
         for(int j=i+1; j<N; j++) {
             p1 = points[i], p2 = points[j];
             dist = Ro * acos((p1 * p2) / (Ro * Ro));
-            if(cmprtr::compare2(dist, radii[i] + radii[j]) == 1) {
+            if(cmprtr::compare2(dist, radii[i] + radii[j]) == -1) {
                 std::cout<<"Overlap: i="<<i<<"; j="<<j<<"; "<<std::endl;
                 std::cout<<"dist="<<dist<<"; r_i="<<radii[i]<<"; r_j="<<radii[j]<<"; r_i+r_j="<<radii[i]+radii[j]<<std::endl;
             }

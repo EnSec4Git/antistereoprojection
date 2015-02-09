@@ -62,7 +62,7 @@ int main() {
             R = center.length();
             phi = atan2(center.Y(),center.X());
             theta = acos(center.Z()/R);
-            fout<<phi<<" "<<theta<<" "<<(rad_factor * (i+1))<<std::endl;
+            fout<<phi<<" "<<theta<<" "<<sphrad<<std::endl;
             sum_plane += sqr(rad_factor * j);
             sum_sphere += 2 * (1 - cos(sphrad));
         }
